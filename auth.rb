@@ -1,18 +1,19 @@
-unless ENV['DATABASE_URL']
-  $stderr.puts "Must set DATABASE_URL environment variable before running"
-  exit(1)
-end
+RODAUTH_DATABASE_URL="postgres://localhost/rodauth_hanami_development"
 
 require 'sequel'
 require 'roda'
 
-DB = Sequel.connect(ENV['DATABASE_URL'])
+DB = Sequel.connect(RODAUTH_DATABASE_URL)
 
 class Auth < Roda
   plugin :middleware
 
-  plugin :rodauth do
-    enable :login, :logout
+  plugin :rodauth, json: true do
+    enable :login, :logout, :jwt
+
+    account_password_hash_column :password_hash
+
+    jwt_secret '1'
   end
 
   route do |r|

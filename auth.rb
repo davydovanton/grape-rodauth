@@ -17,8 +17,7 @@ class Auth < Roda
   end
 
   route do |r|
+    env['rodauth'] = rodauth
     r.rodauth
-
-    rodauth.require_authentication
   end
 end
